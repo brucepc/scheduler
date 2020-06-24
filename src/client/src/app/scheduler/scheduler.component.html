@@ -1,0 +1,39 @@
+<div class="container">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span class="title">
+        <ng-template [ngIf]="isSmallScreen">
+          <button mat-icon-button (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
+        </ng-template>
+        Scheduler
+      </span>
+      <ng-template [ngIf]="!isSmallScreen">
+        <div class="user-data">
+          <span class="user-name" [innerText]="userName"></span>
+          <button mat-button (click)="logOut()">Logout</button>
+        </div>
+      </ng-template>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-drawer-container>
+    <mat-drawer #drawer [opened]="menuOpened" [mode]="menuMode">
+      <ng-template [ngIf]="isSmallScreen">
+        <div class="list-header">
+          <div
+            [innerText]="userName"></div>
+          <button mat-flat-button>Logout</button>
+        </div>
+      </ng-template>
+      <mat-nav-list>
+        <mat-list-item [routerLink]="['appointments']">My Appoitments</mat-list-item>
+      </mat-nav-list>
+    </mat-drawer>
+
+    <div class="sidenav-content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-drawer-container>
+</div>

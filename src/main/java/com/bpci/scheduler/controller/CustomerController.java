@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = {"/customers"}, produces = "application/json")
+@RequestMapping(value = {"/api/customers"}, produces = "application/json")
 public class CustomerController {
     private CustomerRepository repository;
 

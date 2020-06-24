@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping(path = "/signup")
+@RequestMapping(path = "/api/signup")
 public class SignUpController {
     @Autowired
     private SchedulerUserService userService;

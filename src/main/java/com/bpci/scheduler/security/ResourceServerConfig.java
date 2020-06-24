@@ -2,7 +2,6 @@ package com.bpci.scheduler.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -10,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
 import java.util.Arrays;
 
@@ -32,9 +32,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/oauth/token").permitAll()
-                .antMatchers("/signup").permitAll()
-                .antMatchers("/customers/**").hasRole("DOCTOR")
-                .anyRequest().authenticated();
+                .antMatchers("/api/signup").permitAll()
+                .antMatchers("/api/customers/**").hasRole("DOCTOR")
+                .antMatchers("/api/**").authenticated()
+                .anyRequest().permitAll();
     }
 
     @Bean

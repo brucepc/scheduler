@@ -1,0 +1,29 @@
+
+### Get token
+POST http://localhost:8080/oauth/signup
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="Bruce Pinheiro"
+
+name
+--WebAppBoundary--
+
+###
+###
+
+POST http://localhost:8080/oauth/doctor/signup
+Content-Type: application/json
+
+{
+  "email": "brucepc@gmail.com",
+  "name": "Bruce Pinheiro",
+  "password": "123",
+  "crm": "AM1010102",
+  "speciality": "DEFUK"
+}
+
+### List Doctors
+GET http://localhost:8080/doctors
+
+###

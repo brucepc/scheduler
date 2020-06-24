@@ -1,0 +1,30 @@
+[debug] [2020-06-24T08:16:55.174Z] ----------------------------------------------------------------------
+[debug] [2020-06-24T08:16:55.175Z] Command:       /home/bruce/.nvm/versions/node/v12.10.0/bin/node /home/bruce/.nvm/versions/node/v12.10.0/bin/firebase deploy --only hosting:scheduler-medial
+[debug] [2020-06-24T08:16:55.176Z] CLI Version:   7.16.1
+[debug] [2020-06-24T08:16:55.176Z] Platform:      linux
+[debug] [2020-06-24T08:16:55.176Z] Node Version:  v12.10.0
+[debug] [2020-06-24T08:16:55.176Z] Time:          Wed Jun 24 2020 04:16:55 GMT-0400 (Amazon Standard Time)
+[debug] [2020-06-24T08:16:55.176Z] ----------------------------------------------------------------------
+[debug] [2020-06-24T08:16:55.176Z] 
+[debug] [2020-06-24T08:16:55.181Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-06-24T08:16:55.181Z] > authorizing via signed-in user
+[debug] [2020-06-24T08:16:55.181Z] [iam] checking project piscadela-ecom for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2020-06-24T08:16:55.183Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/piscadela-ecom:testIamPermissions  
+
+[debug] [2020-06-24T08:16:56.266Z] <<< HTTP RESPONSE 200
+[debug] [2020-06-24T08:16:56.271Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/piscadela-ecom  
+ 
+[debug] [2020-06-24T08:16:57.537Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'piscadela-ecom'...
+[info] 
+[info] i  deploying hosting
+[info] 
+[info] ✔  Deploy complete!
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/piscadela-ecom/overview
+[debug] [2020-06-24T08:16:57.866Z] TypeError: Cannot read property 'deploys' of undefined
+    at /home/bruce/.nvm/versions/node/v12.10.0/lib/node_modules/firebase-tools/lib/deploy/index.js:84:36
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+[error] 
+[error] Error: An unexpected error has occurred.

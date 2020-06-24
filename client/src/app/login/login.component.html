@@ -1,0 +1,26 @@
+<form [formGroup]="loginFormGroup" (ngSubmit)="submit()">
+  <ng-template [ngIf]="isLoading">
+    <mat-progress-bar mode='query'></mat-progress-bar>
+  </ng-template>
+  <div>
+    <mat-form-field>
+      <mat-label>E-mail</mat-label>
+      <mat-icon matPrefix>person</mat-icon>
+      <input formControlName="username" matInput placeholder="meuemail@example.com"/>
+      <mat-error *ngIf="email.invalid">Utilize um email válido.</mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>Senha</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input [type]='passwordType' formControlName="password" matInput placeholder="senhasupersecreta"/>
+      <mat-button-toggle
+        (click)="togglePasswordVisibility(buttonToggle)"
+        matSuffix #buttonToggle="matButtonToggle">
+        <mat-icon>{{togglePasswordIcon}}</mat-icon>
+      </mat-button-toggle>
+    </mat-form-field>
+  </div>
+  <button class="signin" mat-raised-button color="primary">Entrar</button>
+</form>

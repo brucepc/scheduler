@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        ddl-auto: update
+  profiles:
+    active: dev
+
+#logging:
+#  level:
+#    org.springframework.security: DEBUG
+#security:
+#  oauth2:
+#    client:
+#      scope: password
+#      client-id: scheduler-my-awesome-id
+#      client-secret: scheduler-my-super-secret-key
+

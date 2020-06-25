@@ -12,7 +12,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Customer extends User {

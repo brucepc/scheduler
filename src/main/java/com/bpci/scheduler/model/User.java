@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonView;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

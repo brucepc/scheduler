@@ -4,8 +4,12 @@ import com.bpci.scheduler.model.Doctor;
 import com.bpci.scheduler.repository.DoctorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping({"/api/doctors"})
@@ -33,8 +37,16 @@ public class DoctorController {
     }
 
     @PostMapping
-    public Doctor create(@RequestBody Doctor doctor) {
-        return repository.save(doctor);
+    public ResponseEntity<Doctor> create(@RequestBody Doctor doctor) {
+        Optional<Doctor> found = repository.findByEmail(doctor.getEmail());
+        if (found.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    String.format("O %s já foi esta em uso!", doctor.getEmail())
+            );
+        }
+        Doctor newDoctor = repository.save(doctor);
+        return ResponseEntity.ok().body(newDoctor);
     }
 
     @PutMapping(value = {"/{id}"})

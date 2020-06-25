@@ -1,21 +1,20 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {SelectionModel} from "@angular/cdk/collections";
 import {Observable, of} from "rxjs";
+import {environment} from "../../environments/environment";
+import {SelectionModel} from "@angular/cdk/collections";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
-import {AppointmentsFormComponent} from "./appointments-form/appointments-form.component";
 import {AuthService} from "../auth/auth.service";
-import {environment} from "../../environments/environment";
+import {DoctorFormComponent} from "./doctor-form/doctor-form.component";
 
-export class AppointmentsDataBase {
+export class DoctorsDataBase {
   constructor(private _httpClient: HttpClient) {
   }
 
-  getAppointments(name: string, page: number): Observable<any> {
-    const href = `${environment.hostAddress}/appointments`;
-    console.log('GET APPOINTMENTS', href);
+  getDoctors(name: string, page: number): Observable<any> {
+    const href = `${environment.hostAddress}/doctors`;
     const params = new HttpParams()
       .append('page', '' + page)
       .append('name', name);
@@ -23,16 +22,21 @@ export class AppointmentsDataBase {
   }
 }
 
+
 @Component({
-  selector: 'app-appointments',
-  templateUrl: './appointments.component.html',
-  styleUrls: ['./appointments.component.scss']
+  selector: 'app-doctors',
+  templateUrl: './doctors.component.html',
+  styleUrls: ['./doctors.component.scss']
 })
-export class AppointmentsComponent implements OnInit, AfterViewInit {
+export class DoctorsComponent implements OnInit {
   private allSelected = false;
-  displayedColumns = ['select', 'speciality', 'name', 'date'];
+  displayedColumns = [
+    'select',
+    'name',
+    'crm'
+  ];
   selection = new SelectionModel();
-  dataSource: AppointmentsDataBase | null;
+  dataSource: DoctorsDataBase | null;
   isLoading = false;
   resultsLength: number;
   data: any[] = [];
@@ -43,29 +47,19 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private auth: AuthService
   ) {
-    if (this.isDoctor()) {
-      this.displayedColumns.push('customer');
-    }
   }
+
 
   ngOnInit(): void {
   }
 
-  isDoctor() {
-    const claims = this.auth.getClaims();
-    if (this.auth.isAuthenticated() && 'authorities' in claims) {
-      return claims.authorities.indexOf('ROLE_DOCTOR') > -1;
-    }
-    return false;
-  }
-
   ngAfterViewInit() {
-    this.dataSource = new AppointmentsDataBase(this.http);
+    this.dataSource = new DoctorsDataBase(this.http);
     this.paginator.page.pipe(
       startWith({}),
       switchMap(() => {
         this.isLoading = true;
-        return this.dataSource.getAppointments('', this.paginator.pageIndex);
+        return this.dataSource.getDoctors('', this.paginator.pageIndex);
       }),
       map<any, any>(data => {
         this.isLoading = false;
@@ -79,8 +73,8 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     ).subscribe(data => this.data = data);
   }
 
-  addAppointment() {
-    const dialogRef = this.dialog.open(AppointmentsFormComponent, {
+  addDoctor() {
+    const dialogRef = this.dialog.open(DoctorFormComponent, {
       width: '350px'
     });
     const sbs = dialogRef.afterClosed()
@@ -97,12 +91,4 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
   masterToggle() {
     this.allSelected = !this.allSelected;
   }
-
-  // private loadAppointments() {
-  //   this.http.get('//localhost:8080/appointments')
-  //     .toPromise()
-  //     .then(response => {
-  //       this.dataSource.
-  //     })
-  // }
 }

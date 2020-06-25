@@ -10,10 +10,10 @@ const routes: Routes = [
     component: SchedulerComponent,
     children: [
       {path: 'appointments', component: AppointmentsComponent},
+      {path: 'doctors', loadChildren: () => import('../doctors/doctors.module').then(m => m.DoctorsModule)},
       {path: '', pathMatch: 'full', redirectTo: 'appointments'}
     ]
   },
-
 ];
 
 @NgModule({

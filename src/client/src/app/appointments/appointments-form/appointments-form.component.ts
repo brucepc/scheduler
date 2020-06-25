@@ -7,6 +7,9 @@ import {catchError, delay, distinctUntilChanged, map, switchMap} from "rxjs/oper
 import {MatDialogRef} from "@angular/material/dialog";
 import {AuthService} from "../../auth/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {LocalTimePipe} from "angular2-moment";
+
+const snackBarConfig = {duration: 10000};
 
 @Component({
   selector: 'app-appointments-form',
@@ -23,15 +26,17 @@ export class AppointmentsFormComponent implements OnInit {
   isLoadingDoctors = false;
   isLoadingCustomers = false;
   isLoading = false;
+  private localTimePipe: LocalTimePipe;
 
   constructor(
     public dialogRef: MatDialogRef<AppointmentsFormComponent>,
     private fb: FormBuilder,
     private http: HttpClient,
     private auth: AuthService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
   ) {
     this.buildForm();
+    this.localTimePipe = new LocalTimePipe();
   }
 
   ngOnInit(): void {
@@ -57,13 +62,14 @@ export class AppointmentsFormComponent implements OnInit {
   buildForm() {
     this.appointmentFormGroup = this.fb.group({
       doctorName: this.fb.control('', Validators.required),
-      appointmentDate: this.fb.control('', Validators.required)
+      appointmentDate: this.fb.control('', Validators.required),
+      appointmentHour: this.fb.control('', [Validators.required, Validators.min(6), Validators.max(18)])
     });
     this.sbs.add(
       this.appointmentFormGroup.get('doctorName').valueChanges
         .pipe(
-          delay(200),
           distinctUntilChanged(),
+          delay(300),
           switchMap(v => this.searchDoctors(v))
         )
         .subscribe(v => this.filteredDoctors = v));
@@ -74,12 +80,11 @@ export class AppointmentsFormComponent implements OnInit {
       this.sbs.add(
         customerControl.valueChanges
           .pipe(
-            delay(200),
             distinctUntilChanged(),
+            delay(300),
             switchMap(v => this.searchCustomers(v))
           )
-          .subscribe(v => this.filteredCustomers = v)
-      );
+          .subscribe(v => this.filteredCustomers = v));
     }
   }
 
@@ -89,20 +94,33 @@ export class AppointmentsFormComponent implements OnInit {
     }
   }
 
-  save() {
+  async save() {
     if (this.appointmentFormGroup.invalid) {
-      this.snackbar.open('Não possível criar o agendamento!', null, {duration: 10000})
+      this.snackbar.open('Não possível criar o agendamento!', null, snackBarConfig)
     } else {
-      const {appointmentDate} = this.appointmentFormGroup.getRawValue();
+      let {appointmentDate, appointmentHour} = this.appointmentFormGroup.getRawValue();
+      appointmentDate = this.localTimePipe.transform(appointmentDate).format('YYYY-MM-DD');
+      appointmentDate += ` ${appointmentHour}`;
+
       const appointment = {appointmentDate, doctor: this.selectedDoctor};
-      const endpoint = `${environment.hostAddress}/customers`;
+      const endpoint = `${environment.hostAddress}/appointments`;
+      this.isLoading = true;
+
       if (this.isDoctor()) {
         appointment['customer'] = this.selectedCustomer;
+      } else {
+        try {
+          appointment['customer'] = await this.auth.getUserData().toPromise();
+        } catch (e) {
+          this.snackbar.open('Algo deu errado ao criar o agedamento =/', null, snackBarConfig)
+          this.isLoading = false;
+          return;
+        }
       }
-      this.isLoading = true;
+
       this.http.post(endpoint, appointment)
         .toPromise()
-        .catch(_ => this.snackbar.open('Algo deu errado ao criar o agedamento =/'))
+        .catch(_ => this.snackbar.open('Algo deu errado ao criar o agedamento =/', null, snackBarConfig))
         .then(() => this.cancel())
         .finally(() => this.isLoading = false);
     }

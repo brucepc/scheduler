@@ -24,7 +24,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "America/Manaus")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "America/Manaus")
     private LocalDateTime appointmentDate;
 
     @ManyToOne

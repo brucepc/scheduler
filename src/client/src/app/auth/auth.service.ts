@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {map, tap} from "rxjs/operators";
+import {map, switchMap, tap} from "rxjs/operators";
 import {JwtHelperService} from "@auth0/angular-jwt";
-import {of} from "rxjs";
+import {Observable, of} from "rxjs";
+import {User} from "../../model";
 
 export interface Token {
   access_token: string,
@@ -37,7 +38,7 @@ export class AuthService {
     return this.httpClient.post<Token>(login, payload)
       .pipe(map(token => {
         this.saveToken(token);
-        const decoed = this.helperService.decodeToken();
+        const decoded = this.helperService.decodeToken();
         setTimeout(_ => {
           this.getValidToken();
         }, token.expires_in)
@@ -47,6 +48,23 @@ export class AuthService {
   private saveToken({access_token, refresh_token}) {
     sessionStorage.setItem('access_token', access_token);
     sessionStorage.setItem('refresh_token', refresh_token);
+  }
+
+  getUserData(): Observable<User> {
+    const userDetails = sessionStorage.getItem('user_details');
+    if (!!userDetails) {
+      return of(JSON.parse(userDetails));
+    }
+
+    return this.getValidToken().pipe(
+      switchMap(_ => {
+        const uri = environment.auth.endpoint.userDetails;
+        return this.httpClient.get<User>(uri)
+          .pipe(
+            tap(user => sessionStorage.setItem('user_details', JSON.stringify(user)))
+          );
+      })
+    );
   }
 
   getAccessToken() {
@@ -71,10 +89,15 @@ export class AuthService {
     location.href = this.redirectUrl;
   }
 
+
   getValidToken() {
     const {login} = this.authConfig.endpoint;
     if (this.helperService.isTokenExpired()) {
-      return this.httpClient.post<Token>(login, {'grant_type': 'refresh_token'})
+      const code = sessionStorage.getItem('refresh_token');
+      if (code === null) {
+        location.href = this.loginUrl;
+      }
+      return this.httpClient.post<Token>(login, {'grant_type': 'authorization_code', code})
         .pipe(
           tap(token => this.saveToken(token)),
           map(({access_token}) => access_token)

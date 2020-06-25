@@ -5,6 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../../auth/auth.service";
 import {switchMap} from "rxjs/operators";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-signup',
@@ -48,7 +49,8 @@ export class SignupComponent implements OnInit {
     if (this.customerFormGroup.valid) {
       this.isLoading = true;
       const customer = this.customerFormGroup.getRawValue();
-      this.http.post('http://localhost:8080/signup', customer)
+      const {signup} = environment.auth.endpoint;
+      this.http.post(`${signup}`, customer)
         .pipe(
           switchMap(_ => {
             return this.auth.login(customer.email, customer.password);

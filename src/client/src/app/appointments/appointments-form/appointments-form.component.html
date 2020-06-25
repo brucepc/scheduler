@@ -12,6 +12,7 @@
         <input type="text"
                placeholder="Pick one customer"
                matInput
+               required
                formControlName="customerName"
                [matAutocomplete]="autoCustomer">
         <mat-autocomplete (optionSelected)="setCustomer($event)" autoActiveFirstOption #autoCustomer="matAutocomplete">
@@ -23,6 +24,7 @@
       <input type="text"
              placeholder="Pick one doctor"
              matInput
+             required
              formControlName="doctorName"
              [matAutocomplete]="auto">
       <mat-autocomplete (optionSelected)="setDoctor($event)" autoActiveFirstOption #auto="matAutocomplete">
@@ -32,11 +34,24 @@
   </div>
   <div>
     <mat-form-field>
-      <input type="datetime-local"
+      <input type="date"
              placeholder="Informe a data"
              matInput
+             required
              formControlName="appointmentDate">
       <mat-hint>Informe a data do agendamento</mat-hint>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <input type="time"
+             placeholder="Informe a hora"
+             matInput
+             required
+             min="6:00"
+             max="18:00"
+             formControlName="appointmentHour">
+      <mat-hint>O horario deve ser de 6:00 até as 18:00</mat-hint>
     </mat-form-field>
   </div>
   <div class="actions">

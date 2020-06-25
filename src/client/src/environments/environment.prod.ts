@@ -5,7 +5,8 @@ export const environment = {
   auth: {
     endpoint: {
       login: `${hostAddress}/oauth/token`,
-      singup: `${hostAddress}/singup`
+      signup: `${hostAddress}/api/signup`,
+      userDetails: `${hostAddress}/api/me`
     },
     clientId: 'scheduler-my-awesome-id',
     clientSecret: 'scheduler-my-super-secret-key',

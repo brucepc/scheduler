@@ -42,6 +42,11 @@ export class SchedulerComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isDoctor() {
+    const {authorities}: { authorities: string[] } = this.auth.getClaims();
+    return authorities.includes('ROLE_DOCTOR');
+  }
+
   logOut() {
     this.auth.logout();
   }

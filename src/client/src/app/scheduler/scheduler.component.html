@@ -28,7 +28,9 @@
       </ng-template>
       <mat-nav-list>
         <mat-list-item [routerLink]="['appointments']">My Appoitments</mat-list-item>
-        <mat-list-item [routerLink]="['doctors']">Doctors</mat-list-item>
+        <ng-template [ngIf]="isDoctor()">
+          <mat-list-item [routerLink]="['doctors']">Doctors</mat-list-item>
+        </ng-template>
       </mat-nav-list>
     </mat-drawer>
 

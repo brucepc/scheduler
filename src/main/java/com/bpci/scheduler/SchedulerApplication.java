@@ -30,17 +30,6 @@ public class SchedulerApplication {
         SpringApplication.run(SchedulerApplication.class, args);
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                        .allowedOrigins("*");
-//            }
-//        };
-//    }
-
     @Bean
     public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -95,5 +84,5 @@ public class SchedulerApplication {
 //                    .forEach(System.out::println);
 //        };
 //    }
-
+//
 }

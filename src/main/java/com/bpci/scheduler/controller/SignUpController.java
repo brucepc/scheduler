@@ -39,7 +39,7 @@ public class SignUpController {
 
         if (auth != null) {
             String username = auth.getName();
-            if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"))) {
+            if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CUSTOMER"))) {
                 return customerRepository.findByEmail(username).map(u -> ResponseEntity.ok().body(u))
                         .orElse(ResponseEntity.notFound().build());
             } else {
